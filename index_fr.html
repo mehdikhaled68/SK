@@ -223,6 +223,10 @@
 <!-- ─── AI CRAWLER PERMISSIONS ────────────────────── -->
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="SK Favicon.png">
+<link rel="shortcut icon" type="image/png" href="SK Favicon.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -258,10 +262,10 @@ nav {
   background: rgba(250,248,244,0.97);
   backdrop-filter: blur(10px);
   border-bottom: 0.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  padding: 0 48px; height: 76px; gap: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 76px;
 }
-.nav-logo { height: 52px; width: auto; display: block; position: absolute; left: 48px; }
+.nav-logo { height: 64px; width: auto; display: block; }
 .nav-links { display: flex; gap: 28px; list-style: none; }
 .nav-links a {
   font-size: 11px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
@@ -269,7 +273,7 @@ nav {
 }
 .nav-links a:hover { color: var(--navy); }
 .nav-lang {
-  display: flex; gap: 8px; align-items: center; position: absolute; right: 48px;
+  display: flex; gap: 8px; align-items: center;
 }
 .lang-link {
   font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
@@ -755,9 +759,8 @@ footer {
   
   /* Nav */
   nav { padding: 0 28px; height: 64px; }
-  .nav-logo { height: 42px; left: 28px; }
+  .nav-logo { height: 48px; }
   .nav-links { display: none; }
-  .nav-lang { right: 28px; }
   
   /* Hero */
   .hero-section { 
