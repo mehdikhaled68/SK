@@ -725,6 +725,89 @@ footer {
   .contact-heading { font-size: 36px; }
 }
 
+
+/* ─── MOBILE MENU ────────────────────────────────── */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.mobile-menu-toggle svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--navy);
+  stroke-width: 2;
+}
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(19,30,53,0.95);
+  z-index: 999;
+  padding: 80px 28px 28px;
+}
+.mobile-menu-overlay.active {
+  display: block;
+}
+.mobile-menu-close {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+.mobile-menu-close svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--cream);
+  stroke-width: 2;
+}
+.mobile-menu-links {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+.mobile-menu-links a {
+  font-size: 24px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-decoration: none;
+  font-weight: 300;
+}
+.mobile-menu-lang {
+  display: flex;
+  gap: 16px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(250,248,244,0.2);
+}
+.mobile-menu-lang a {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid rgba(250,248,244,0.3);
+}
+.mobile-menu-lang a.active {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
+}
+
 </style>
 
 <!-- Security Headers -->
@@ -756,7 +839,37 @@ footer {
     <a href="index_fr.html" class="lang-link">FR</a>
     <a href="index_ar.html" class="lang-link active">AR</a>
   </div>
+
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
+  <svg viewBox="0 0 24 24" fill="none">
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <line x1="3" y1="12" x2="21" y2="12"/>
+    <line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
 </nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+  <nav class="mobile-menu-links">
+    <li><a href="#practice">الخبرات</a></li>
+    <li><a href="#about">نبذة</a></li>
+    <li><a href="#publications">المنشورات</a></li>
+    <li><a href="#contact">اتصل</a></li>
+  </nav>
+  <div class="mobile-menu-lang">
+    <a href="index.html" class="">EN</a>
+    <a href="index_fr.html" class="">FR</a>
+    <a href="index_ar.html" class="active">AR</a>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════ -->
 <!-- HERO                                            -->
@@ -1559,5 +1672,20 @@ function submitForm() {
 }
 </script>
 
+
+<script>
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('active');
+  document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+}
+
+// Close mobile menu when clicking a link
+document.querySelectorAll('.mobile-menu-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    toggleMobileMenu();
+  });
+});
+</script>
 </body>
 </html>
