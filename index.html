@@ -768,8 +768,18 @@ footer {
   /* Nav */
   nav { padding: 0 28px; height: 64px; }
   .nav-logo { height: 48px; }
-  .mobile-menu-toggle { display: block; }
-  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-links {
+    display: none;
+    position: fixed; top: 76px; right: 0; left: 0; z-index: 99;
+    flex-direction: column; gap: 0; list-style: none;
+    background: rgba(250,248,244,0.98); backdrop-filter: blur(10px);
+    border-bottom: 0.5px solid var(--border); padding: 8px 0;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li { width: 100%; }
+  .nav-links a { display: block; padding: 14px 28px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 0.5px solid var(--border); }
+  .nav-links li:last-child a { border-bottom: none; }
 
   /* Hero */
   .hero {
@@ -1076,36 +1086,8 @@ footer {
     <a href="index_ar.html" class="lang-link">AR</a>
   </div>
 
-<!-- Mobile Menu Toggle -->
-<button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
-  <svg viewBox="0 0 24 24" fill="none">
-    <line x1="3" y1="6" x2="21" y2="6"/>
-    <line x1="3" y1="12" x2="21" y2="12"/>
-    <line x1="3" y1="18" x2="21" y2="18"/>
-  </svg>
-</button>
+<button class="nav-hamburger" id="navHamburger" onclick="toggleNav()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
-
-<!-- Mobile Menu Overlay -->
-<div class="mobile-menu-overlay" id="mobileMenu">
-  <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close">
-    <svg viewBox="0 0 24 24" fill="none">
-      <line x1="18" y1="6" x2="6" y2="18"/>
-      <line x1="6" y1="6" x2="18" y2="18"/>
-    </svg>
-  </button>
-  <nav class="mobile-menu-links">
-    <li><a href="#practice">Expertise</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </nav>
-  <div class="mobile-menu-lang">
-    <a href="index.html" class="active">EN</a>
-    <a href="index_fr.html" class="">FR</a>
-    <a href="index_ar.html" class="">AR</a>
-  </div>
-</div>
 
 <!-- ═══════════════════════════════════════════════ -->
 <!-- HERO                                            -->
@@ -1838,30 +1820,24 @@ function submitForm() {
   
   btn.classList.add('sending');
   btn.textContent = 'Sending...';
-  
-  // Collect form data
-  const formData = {
-    name: fields.name.el.value,
-    organisation: document.getElementById('f-org').value,
-    email: fields.email.el.value,
-    subject: fields.subject.el.value,
-    message: fields.message.el.value,
-    _replyto: fields.email.el.value,
-    _subject: `SK Lawyers Contact: ${fields.subject.el.value}`
-  };
-  
-  // Send to Formspree (or your own backend)
-  // For Formspree: Create account at formspree.io and replace FORM_ID below
-  fetch('https://formspree.io/f/YOUR_FORM_ID', {
+
+  fetch('https://formsubmit.co/ajax/salma@sklawyers.cc', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      'Name':         fields.name.el.value.trim(),
+      'Email':        fields.email.el.value.trim(),
+      'Organisation': document.getElementById('f-org').value.trim(),
+      'Subject':      fields.subject.el.value.trim(),
+      'Message':      fields.message.el.value.trim(),
+      '_subject':     'New Enquiry — ' + fields.subject.el.value.trim(),
+      '_captcha':     'false',
+      '_template':    'table'
+    })
   })
-  .then(response => {
-    if (response.ok) {
-      // Clear form
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
       Object.keys(fields).forEach(key => {
         fields[key].el.value = '';
         fields[key].status.textContent = '';
@@ -1871,22 +1847,13 @@ function submitForm() {
       document.getElementById('f-org').value = '';
       document.getElementById('f-email2').value = '';
       document.getElementById('fs-email2').textContent = '';
-      
       btn.classList.remove('sending', 'ready');
       btn.textContent = 'Send Enquiry →';
       success.classList.add('visible');
-      turnstileValid = false;
-      
-      // Reset Turnstile
-      if (typeof turnstile !== 'undefined') {
-        turnstile.reset();
-      }
-      
-      setTimeout(() => {
-        success.classList.remove('visible');
-      }, 8000);
+      turnstileValid = true;
+      setTimeout(() => success.classList.remove('visible'), 8000);
     } else {
-      throw new Error('Form submission failed');
+      throw new Error('Submission failed');
     }
   })
   .catch(error => {
@@ -1901,16 +1868,23 @@ function submitForm() {
 
 
 <script>
-function toggleMobileMenu() {
-  const menu = document.getElementById('mobileMenu');
-  menu.classList.toggle('active');
-  document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+function toggleNav() {
+  var links = document.querySelector('.nav-links');
+  var bars = document.querySelectorAll('.nav-hamburger span');
+  var isOpen = links.classList.toggle('open');
+  bars[0].style.transform = isOpen ? 'translateY(6.5px) rotate(45deg)' : '';
+  bars[1].style.opacity  = isOpen ? '0' : '1';
+  bars[2].style.transform = isOpen ? 'translateY(-6.5px) rotate(-45deg)' : '';
 }
 
-// Close mobile menu when clicking a link
-document.querySelectorAll('.mobile-menu-links a').forEach(link => {
-  link.addEventListener('click', () => {
-    toggleMobileMenu();
+document.querySelectorAll('.nav-links a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    var links = document.querySelector('.nav-links');
+    var bars = document.querySelectorAll('.nav-hamburger span');
+    links.classList.remove('open');
+    bars[0].style.transform = '';
+    bars[1].style.opacity = '1';
+    bars[2].style.transform = '';
   });
 });
 </script>

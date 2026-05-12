@@ -651,9 +651,17 @@ footer {
   nav { padding: 0 28px; height: 64px; }
   .nav-logo { height: 48px; }
   .nav-hamburger { display: flex; }
-  .nav-links { display: none; top: 64px; }
+  .nav-links {
+    display: none;
+    position: fixed; top: 64px; right: 0; left: 0; z-index: 99;
+    flex-direction: column; gap: 0; list-style: none;
+    background: rgba(250,248,244,0.98); backdrop-filter: blur(10px);
+    border-bottom: 0.5px solid var(--border); padding: 8px 0;
+  }
   .nav-links.open { display: flex; }
-  .nav-links a { padding: 14px 28px; }
+  .nav-links li { width: 100%; }
+  .nav-links a { display: block; padding: 14px 28px; font-size: 13px; letter-spacing: 0.04em; text-align: right; border-bottom: 0.5px solid var(--border); }
+  .nav-links li:last-child a { border-bottom: none; }
 
   /* Hero */
   .hero {
